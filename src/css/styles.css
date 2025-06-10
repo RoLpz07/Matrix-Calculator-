@@ -3,3 +3,48 @@ body {
     margin: 2em;
     background: #f9f9f9;
 }
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+button {
+    background: #2980b9;
+    color: #fff;
+    border: none;
+    padding: 0.6em 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0.2em;
+    font-size: 1em;
+    transition: background 0.2s;
+}
+button:hover {
+    background: #3498db;
+}
+
+input[type="number"] {
+    width: 60px;
+    padding: 0.3em;
+    margin: 0.1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.matrix-grid {
+    display: grid;
+    gap: 0.3em;
+    margin-bottom: 1em;
+}
