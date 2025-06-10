@@ -47,16 +47,116 @@ function sonDimensionesIguales(A, B) {
     );
 }
 
-const matrizA = [
-    [1, 2],
-    [3, 4]
-];
-const matrizB = [
-    [5, 6],
-    [7, 8]
-];
+document.getElementById('generar').addEventListener('click', () => {
+    const size = parseInt(document.getElementById('size').value);
+    const matricesInputs = document.getElementById('matrices-inputs');
+    matricesInputs.innerHTML = '';
 
-console.log('Suma:', sumarMatrices(matrizA, matrizB));
-console.log('Resta:', restarMatrices(matrizA, matrizB));
-console.log('Multiplicación:', multiplicarMatrices(matrizA, matrizB));
-console.log('Multiplicación por escalar (2):', multiplicarPorEscalar(2, matrizA));
+  
+    matricesInputs.appendChild(document.createElement('hr'));
+    const labelA = document.createElement('h3');
+    labelA.textContent = 'Matriz A';
+    matricesInputs.appendChild(labelA);
+    matricesInputs.appendChild(crearGridInputs('A', size));
+
+   
+    matricesInputs.appendChild(document.createElement('hr'));
+    const labelB = document.createElement('h3');
+    labelB.textContent = 'Matriz B';
+    matricesInputs.appendChild(labelB);
+    matricesInputs.appendChild(crearGridInputs('B', size));
+});
+
+
+document.getElementById('limpiar').addEventListener('click', () => {
+    document.getElementById('matrices-inputs').innerHTML = '';
+    document.getElementById('resultado').innerHTML = '';
+});
+
+
+function crearGridInputs(prefix, size) {
+    const grid = document.createElement('div');
+    grid.className = 'matrix-grid';
+    grid.style.gridTemplateColumns = `repeat(${size}, 60px)`;
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.id = `${prefix}_${i}_${j}`;
+            input.value = 0;
+            grid.appendChild(input);
+        }
+    }
+    return grid;
+}
+
+function obtenerMatriz(prefix, size) {
+    const matriz = [];
+    for (let i = 0; i < size; i++) {
+        const fila = [];
+        for (let j = 0; j < size; j++) {
+            const val = parseFloat(document.getElementById(`${prefix}_${i}_${j}`).value);
+            fila.push(isNaN(val) ? 0 : val);
+        }
+        matriz.push(fila);
+    }
+    return matriz;
+}
+
+function mostrarResultado(resultado) {
+    const div = document.getElementById('resultado');
+    if (Array.isArray(resultado)) {
+        div.innerHTML = '<h3>Resultado:</h3>' + 
+            '<pre>' + resultado.map(fila => fila.join('\t')).join('\n') + '</pre>';
+    } else {
+        div.innerHTML = `<h3>Resultado:</h3><p>${resultado}</p>`;
+    }
+}
+
+document.getElementById('sumar').addEventListener('click', () => {
+    const size = parseInt(document.getElementById('size').value);
+    const A = obtenerMatriz('A', size);
+    const B = obtenerMatriz('B', size);
+    try {
+        const resultado = sumarMatrices(A, B);
+        mostrarResultado(resultado);
+    } catch (e) {
+        mostrarResultado(e.message);
+    }
+});
+
+document.getElementById('restar').addEventListener('click', () => {
+    const size = parseInt(document.getElementById('size').value);
+    const A = obtenerMatriz('A', size);
+    const B = obtenerMatriz('B', size);
+    try {
+        const resultado = restarMatrices(A, B);
+        mostrarResultado(resultado);
+    } catch (e) {
+        mostrarResultado(e.message);
+    }
+});
+
+document.getElementById('multiplicar').addEventListener('click', () => {
+    const size = parseInt(document.getElementById('size').value);
+    const A = obtenerMatriz('A', size);
+    const B = obtenerMatriz('B', size);
+    try {
+        const resultado = multiplicarMatrices(A, B);
+        mostrarResultado(resultado);
+    } catch (e) {
+        mostrarResultado(e.message);
+    }
+});
+
+document.getElementById('escalar').addEventListener('click', () => {
+    const size = parseInt(document.getElementById('size').value);
+    const A = obtenerMatriz('A', size);
+    const k = parseFloat(prompt('Ingrese el escalar:'));
+    try {
+        const resultado = multiplicarPorEscalar(k, A);
+        mostrarResultado(resultado);
+    } catch (e) {
+        mostrarResultado(e.message);
+    }
+});

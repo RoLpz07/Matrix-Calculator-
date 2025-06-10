@@ -7,7 +7,26 @@
 </head>
 <body>
     <h1>Calculadora de Matrices</h1>
-      
+    <div class="container">
+        <form id="matrix-form">
+            <label for="size">Tamaño de la matriz (n x n):</label>
+            <input type="number" id="size" name="size" min="2" max="10" value="2" required>
+            <button type="button" id="generar">Generar matrices</button>
+            <button type="button" id="limpiar">Limpiar</button>
+        </form>
+        <div id="matrices-inputs"></div>
+        <div id="operaciones">
+            <button type="button" id="sumar">Sumar</button>
+            <button type="button" id="restar">Restar</button>
+            <button type="button" id="multiplicar">Multiplicar</button>
+            <button type="button" id="escalar">Multiplicar por escalar</button>
+            <button type="button" id="transponer">Transponer</button>
+            <button type="button" id="determinante">Determinante</button>
+            <button type="button" id="inversa">Inversa</button>
+            <button type="button" id="identidad">Identidad</button>
+        </div>
+        <div id="resultado"></div>
+    </div>
     <script src="src/js/matrix.js"></script>
 </body>
 </html>
