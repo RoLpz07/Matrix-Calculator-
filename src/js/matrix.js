@@ -324,11 +324,11 @@ function inversa(M) {
     const n = M.length;
     const det = determinante(M);
     if (Math.abs(det) < 1e-8) throw new Error("La matriz no es invertible.");
-    // Matriz aumentada
+  
     let A = M.map((fila, i) => [...fila, ...identidad(n)[i]]);
-    // Gauss-Jordan
+   
     for (let i = 0; i < n; i++) {
-        // Pivote
+       
         let maxRow = i;
         for (let k = i+1; k < n; k++) if (Math.abs(A[k][i]) > Math.abs(A[maxRow][i])) maxRow = k;
         [A[i], A[maxRow]] = [A[maxRow], A[i]];

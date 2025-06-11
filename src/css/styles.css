@@ -38,7 +38,7 @@ form#matrix-form {
     border: 1px solid #576cbc;
 }
 
-/* Operaciones: azul intermedio */
+
 #operaciones {
     display: flex;
     flex-wrap: wrap;
@@ -94,7 +94,7 @@ input[type="number"]:focus {
     color: #fff;
 }
 
-/* Matriz: gris azulado */
+
 .matrix-grid {
     display: grid;
     gap: 0.3em;
@@ -116,7 +116,7 @@ h3 {
     text-shadow: 0 1px 4px #232946;
 }
 
-/* Resultado: azul más claro */
+
 #resultado {
     background: #2d3656;
     border-radius: 10px;
