@@ -103,14 +103,47 @@ function obtenerMatriz(prefix, size) {
     return matriz;
 }
 
-function mostrarResultado(resultado) {
+function mostrarResultado(resultado, titulo = "Resultado") {
     const div = document.getElementById('resultado');
     if (Array.isArray(resultado)) {
-        div.innerHTML = '<h3>Resultado:</h3>' + 
-            '<pre>' + resultado.map(fila => fila.join('\t')).join('\n') + '</pre>';
+        div.innerHTML = `
+            <div class="result-matrix">
+                <table>
+                    <caption>${titulo}</caption>
+                    <tbody>
+                        ${resultado.map(fila => `<tr>${fila.map(val => `<td>${val}</td>`).join('')}</tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
     } else {
-        div.innerHTML = `<h3>Resultado:</h3><p>${resultado}</p>`;
+        div.innerHTML = `<div class="result-matrix"><strong>${titulo}:</strong> <span>${resultado}</span></div>`;
     }
+}
+
+
+function mostrarResultadoEscalar(resultadoA, resultadoB, k) {
+    const div = document.getElementById('resultado');
+    div.innerHTML = `
+        <div style="display:flex; gap:2em; flex-wrap:wrap; justify-content:center;">
+            <div class="result-matrix">
+                <table>
+                    <caption>Matriz A × ${k}</caption>
+                    <tbody>
+                        ${resultadoA.map(fila => `<tr>${fila.map(val => `<td>${val}</td>`).join('')}</tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+            <div class="result-matrix">
+                <table>
+                    <caption>Matriz B × ${k}</caption>
+                    <tbody>
+                        ${resultadoB.map(fila => `<tr>${fila.map(val => `<td>${val}</td>`).join('')}</tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
 }
 
 document.getElementById('sumar').addEventListener('click', () => {
@@ -162,21 +195,3 @@ document.getElementById('escalar').addEventListener('click', () => {
         mostrarResultado(e.message);
     }
 });
-
-// Nueva función para mostrar ambos resultados
-function mostrarResultadoEscalar(resultadoA, resultadoB, k) {
-    const div = document.getElementById('resultado');
-    div.innerHTML = `
-        <h3>Resultado de multiplicar por escalar (${k}):</h3>
-        <div style="display:flex; gap:2em; flex-wrap:wrap; justify-content:center;">
-            <div>
-                <strong>Matriz A × ${k}:</strong>
-                <pre>${resultadoA.map(fila => fila.join('\t')).join('\n')}</pre>
-            </div>
-            <div>
-                <strong>Matriz B × ${k}:</strong>
-                <pre>${resultadoB.map(fila => fila.join('\t')).join('\n')}</pre>
-            </div>
-        </div>
-    `;
-}
