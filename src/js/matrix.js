@@ -152,11 +152,31 @@ document.getElementById('multiplicar').addEventListener('click', () => {
 document.getElementById('escalar').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
     const A = obtenerMatriz('A', size);
+    const B = obtenerMatriz('B', size);
     const k = parseFloat(prompt('Ingrese el escalar:'));
     try {
-        const resultado = multiplicarPorEscalar(k, A);
-        mostrarResultado(resultado);
+        const resultadoA = multiplicarPorEscalar(k, A);
+        const resultadoB = multiplicarPorEscalar(k, B);
+        mostrarResultadoEscalar(resultadoA, resultadoB, k);
     } catch (e) {
         mostrarResultado(e.message);
     }
 });
+
+// Nueva función para mostrar ambos resultados
+function mostrarResultadoEscalar(resultadoA, resultadoB, k) {
+    const div = document.getElementById('resultado');
+    div.innerHTML = `
+        <h3>Resultado de multiplicar por escalar (${k}):</h3>
+        <div style="display:flex; gap:2em; flex-wrap:wrap; justify-content:center;">
+            <div>
+                <strong>Matriz A × ${k}:</strong>
+                <pre>${resultadoA.map(fila => fila.join('\t')).join('\n')}</pre>
+            </div>
+            <div>
+                <strong>Matriz B × ${k}:</strong>
+                <pre>${resultadoB.map(fila => fila.join('\t')).join('\n')}</pre>
+            </div>
+        </div>
+    `;
+}
