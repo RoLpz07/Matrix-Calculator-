@@ -298,11 +298,52 @@ document.getElementById('inversa').addEventListener('click', () => {
     try {
         const invA = inversa(A);
         const invB = inversa(B);
-        mostrarResultadoEscalar(invA, invB, "-1");
+
+        const verifA = multiplicarMatrices(A, invA);
+        const verifB = multiplicarMatrices(B, invB);
+
+        mostrarResultadoDobleInversa(invA, invB, verifA, verifB);
     } catch (e) {
         mostrarResultado(e.message);
     }
 });
+
+// Nueva función para mostrar inversa y verificación
+function mostrarResultadoDobleInversa(invA, invB, verifA, verifB) {
+    const div = document.getElementById('resultado');
+    div.innerHTML = `
+        <div style="display:flex; gap:2em; flex-wrap:wrap; justify-content:center;">
+            <div class="result-matrix">
+                <table>
+                    <caption>Inversa de A</caption>
+                    <tbody>
+                        ${invA.map(fila => `<tr>${fila.map(val => `<td>${val.toFixed(4)}</td>`).join('')}</tr>`).join('')}
+                    </tbody>
+                </table>
+                <table>
+                    <caption>A × Inversa de A (Identidad)</caption>
+                    <tbody>
+                        ${verifA.map(fila => `<tr>${fila.map(val => `<td>${val.toFixed(4)}</td>`).join('')}</tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+            <div class="result-matrix">
+                <table>
+                    <caption>Inversa de B</caption>
+                    <tbody>
+                        ${invB.map(fila => `<tr>${fila.map(val => `<td>${val.toFixed(4)}</td>`).join('')}</tr>`).join('')}
+                    </tbody>
+                </table>
+                <table>
+                    <caption>B × Inversa de B (Identidad)</caption>
+                    <tbody>
+                        ${verifB.map(fila => `<tr>${fila.map(val => `<td>${val.toFixed(4)}</td>`).join('')}</tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
 
 document.getElementById('identidad').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
