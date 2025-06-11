@@ -183,15 +183,170 @@ document.getElementById('multiplicar').addEventListener('click', () => {
 });
 
 document.getElementById('escalar').addEventListener('click', () => {
+    mostrarCuadroEscalar();
+});
+
+
+function mostrarCuadroEscalar() {
+  
+    if (document.getElementById('cuadro-escalar')) return;
+
+    const resultadoDiv = document.getElementById('resultado');
+    const size = parseInt(document.getElementById('size').value);
+
+
+    const cuadro = document.createElement('div');
+    cuadro.id = 'cuadro-escalar';
+    cuadro.style.background = '#232946';
+    cuadro.style.border = '1.5px solid #ffd6e0';
+    cuadro.style.borderRadius = '10px';
+    cuadro.style.padding = '1em';
+    cuadro.style.margin = '1em auto';
+    cuadro.style.maxWidth = '320px';
+    cuadro.style.textAlign = 'center';
+    cuadro.style.boxShadow = '0 2px 8px rgba(35,69,103,0.13)';
+    cuadro.innerHTML = `
+        <label for="input-escalar" style="color:#ffd6e0;font-weight:600;">Escalar:</label>
+        <input type="number" id="input-escalar" style="margin:0.5em 0.5em 0.5em 0.7em;width:90px;">
+        <button id="aplicar-escalar" style="margin-left:0.5em;">Aplicar</button>
+        <button id="cancelar-escalar" style="margin-left:0.5em;">Cancelar</button>
+    `;
+
+    resultadoDiv.prepend(cuadro);
+
+    document.getElementById('input-escalar').focus();
+
+    document.getElementById('aplicar-escalar').onclick = () => {
+        const k = parseFloat(document.getElementById('input-escalar').value);
+        const A = obtenerMatriz('A', size);
+        const B = obtenerMatriz('B', size);
+        try {
+            const resultadoA = multiplicarPorEscalar(k, A);
+            const resultadoB = multiplicarPorEscalar(k, B);
+            mostrarResultadoEscalar(resultadoA, resultadoB, k);
+        } catch (e) {
+            mostrarResultado(e.message);
+        }
+        cuadro.remove();
+    };
+
+    document.getElementById('cancelar-escalar').onclick = () => {
+        cuadro.remove();
+    };
+}
+
+document.getElementById('transponer').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
     const A = obtenerMatriz('A', size);
     const B = obtenerMatriz('B', size);
-    const k = parseFloat(prompt('Ingrese el escalar:'));
+    const transA = transponerMatriz(A);
+    const transB = transponerMatriz(B);
+    mostrarResultadoTranspuestas(transA, transB);
+});
+
+function transponerMatriz(M) {
+    return M[0].map((_, i) => M.map(fila => fila[i]));
+}
+
+function mostrarResultadoTranspuestas(transA, transB) {
+    const div = document.getElementById('resultado');
+    div.innerHTML = `
+        <div style="display:flex; gap:2em; flex-wrap:wrap; justify-content:center;">
+            <div class="result-matrix">
+                <table>
+                    <caption>Transpuesta de A</caption>
+                    <tbody>
+                        ${transA.map(fila => `<tr>${fila.map(val => `<td>${val}</td>`).join('')}</tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+            <div class="result-matrix">
+                <table>
+                    <caption>Transpuesta de B</caption>
+                    <tbody>
+                        ${transB.map(fila => `<tr>${fila.map(val => `<td>${val}</td>`).join('')}</tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+document.getElementById('determinante').addEventListener('click', () => {
+    const size = parseInt(document.getElementById('size').value);
+    const A = obtenerMatriz('A', size);
+    const B = obtenerMatriz('B', size);
     try {
-        const resultadoA = multiplicarPorEscalar(k, A);
-        const resultadoB = multiplicarPorEscalar(k, B);
-        mostrarResultadoEscalar(resultadoA, resultadoB, k);
+        const detA = determinante(A).toFixed(4);
+        const detB = determinante(B).toFixed(4);
+        mostrarResultado(
+            [
+                [`det(A) = ${detA}`],
+                [`det(B) = ${detB}`]
+            ],
+            "Determinantes"
+        );
     } catch (e) {
         mostrarResultado(e.message);
     }
 });
+
+document.getElementById('inversa').addEventListener('click', () => {
+    const size = parseInt(document.getElementById('size').value);
+    const A = obtenerMatriz('A', size);
+    const B = obtenerMatriz('B', size);
+    try {
+        const invA = inversa(A);
+        const invB = inversa(B);
+        mostrarResultadoEscalar(invA, invB, "-1");
+    } catch (e) {
+        mostrarResultado(e.message);
+    }
+});
+
+document.getElementById('identidad').addEventListener('click', () => {
+    const size = parseInt(document.getElementById('size').value);
+    mostrarResultado(identidad(size), `Identidad ${size}x${size}`);
+});
+
+function determinante(M) {
+    const n = M.length;
+    if (n === 1) return M[0][0];
+    if (n === 2) return M[0][0]*M[1][1] - M[0][1]*M[1][0];
+    let det = 0;
+    for (let j = 0; j < n; j++) {
+        det += ((j % 2 === 0 ? 1 : -1) * M[0][j] * determinante(M.slice(1).map(row => row.filter((_, col) => col !== j))));
+    }
+    return det;
+}
+
+function inversa(M) {
+    const n = M.length;
+    const det = determinante(M);
+    if (Math.abs(det) < 1e-8) throw new Error("La matriz no es invertible.");
+    // Matriz aumentada
+    let A = M.map((fila, i) => [...fila, ...identidad(n)[i]]);
+    // Gauss-Jordan
+    for (let i = 0; i < n; i++) {
+        // Pivote
+        let maxRow = i;
+        for (let k = i+1; k < n; k++) if (Math.abs(A[k][i]) > Math.abs(A[maxRow][i])) maxRow = k;
+        [A[i], A[maxRow]] = [A[maxRow], A[i]];
+        let pivote = A[i][i];
+        if (Math.abs(pivote) < 1e-8) throw new Error("La matriz no es invertible.");
+        for (let j = 0; j < 2*n; j++) A[i][j] /= pivote;
+        for (let k = 0; k < n; k++) {
+            if (k !== i) {
+                let factor = A[k][i];
+                for (let j = 0; j < 2*n; j++) A[k][j] -= factor * A[i][j];
+            }
+        }
+    }
+    return A.map(fila => fila.slice(n));
+}
+
+function identidad(n) {
+    return Array.from({length: n}, (_, i) =>
+        Array.from({length: n}, (_, j) => (i === j ? 1 : 0))
+    );
+}
