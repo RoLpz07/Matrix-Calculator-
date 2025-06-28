@@ -1,5 +1,6 @@
-console.log('Matrix Calculator.');
+console.log('Matrix Calculator.'); 
 
+// Suma dos matrices A y B de igual dimensión
 function sumarMatrices(A, B) {
     if (!sonDimensionesIguales(A, B)) {
         throw new Error('Las matrices deben tener las mismas dimensiones para sumarse.');
@@ -7,6 +8,7 @@ function sumarMatrices(A, B) {
     return A.map((fila, i) => fila.map((val, j) => val + B[i][j]));
 }
 
+// Resta dos matrices A y B de igual dimensión
 function restarMatrices(A, B) {
     if (!sonDimensionesIguales(A, B)) {
         throw new Error('Las matrices deben tener las mismas dimensiones para restarse.');
@@ -14,6 +16,7 @@ function restarMatrices(A, B) {
     return A.map((fila, i) => fila.map((val, j) => val - B[i][j]));
 }
 
+// Multiplica dos matrices A y B (A columnas = B filas)
 function multiplicarMatrices(A, B) {
     if (A[0].length !== B.length) {
         throw new Error('El número de columnas de A debe ser igual al número de filas de B.');
@@ -32,6 +35,7 @@ function multiplicarMatrices(A, B) {
     return resultado;
 }
 
+// Multiplica una matriz A por un escalar k
 function multiplicarPorEscalar(k, A) {
     if (typeof k !== 'number' || isNaN(k)) {
         throw new Error('El escalar debe ser un número válido.');
@@ -39,6 +43,7 @@ function multiplicarPorEscalar(k, A) {
     return A.map(fila => fila.map(val => k * val));
 }
 
+// Verifica si dos matrices tienen las mismas dimensiones
 function sonDimensionesIguales(A, B) {
     return (
         Array.isArray(A) && Array.isArray(B) &&
@@ -47,19 +52,18 @@ function sonDimensionesIguales(A, B) {
     );
 }
 
+// Evento para generar los inputs de las matrices según el tamaño seleccionado
 document.getElementById('generar').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
     const matricesInputs = document.getElementById('matrices-inputs');
     matricesInputs.innerHTML = '';
 
-  
     matricesInputs.appendChild(document.createElement('hr'));
     const labelA = document.createElement('h3');
     labelA.textContent = 'Matriz A';
     matricesInputs.appendChild(labelA);
     matricesInputs.appendChild(crearGridInputs('A', size));
 
-   
     matricesInputs.appendChild(document.createElement('hr'));
     const labelB = document.createElement('h3');
     labelB.textContent = 'Matriz B';
@@ -67,13 +71,13 @@ document.getElementById('generar').addEventListener('click', () => {
     matricesInputs.appendChild(crearGridInputs('B', size));
 });
 
-
+// Evento para limpiar los inputs y resultados
 document.getElementById('limpiar').addEventListener('click', () => {
     document.getElementById('matrices-inputs').innerHTML = '';
     document.getElementById('resultado').innerHTML = '';
 });
 
-
+// Crea los inputs para una matriz de tamaño size x size
 function crearGridInputs(prefix, size) {
     const grid = document.createElement('div');
     grid.className = 'matrix-grid';
@@ -90,6 +94,7 @@ function crearGridInputs(prefix, size) {
     return grid;
 }
 
+// Obtiene los valores de los inputs y construye la matriz correspondiente
 function obtenerMatriz(prefix, size) {
     const matriz = [];
     for (let i = 0; i < size; i++) {
@@ -103,6 +108,7 @@ function obtenerMatriz(prefix, size) {
     return matriz;
 }
 
+// Muestra el resultado de una operación en el div de resultados
 function mostrarResultado(resultado, titulo = "Resultado") {
     const div = document.getElementById('resultado');
     if (Array.isArray(resultado)) {
@@ -121,7 +127,7 @@ function mostrarResultado(resultado, titulo = "Resultado") {
     }
 }
 
-
+// Muestra el resultado de multiplicar por escalar para ambas matrices
 function mostrarResultadoEscalar(resultadoA, resultadoB, k) {
     const div = document.getElementById('resultado');
     div.innerHTML = `
@@ -146,6 +152,7 @@ function mostrarResultadoEscalar(resultadoA, resultadoB, k) {
     `;
 }
 
+// Evento para sumar matrices
 document.getElementById('sumar').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
     const A = obtenerMatriz('A', size);
@@ -158,6 +165,7 @@ document.getElementById('sumar').addEventListener('click', () => {
     }
 });
 
+// Evento para restar matrices
 document.getElementById('restar').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
     const A = obtenerMatriz('A', size);
@@ -170,6 +178,7 @@ document.getElementById('restar').addEventListener('click', () => {
     }
 });
 
+// Evento para multiplicar matrices
 document.getElementById('multiplicar').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
     const A = obtenerMatriz('A', size);
@@ -182,18 +191,17 @@ document.getElementById('multiplicar').addEventListener('click', () => {
     }
 });
 
+// Evento para mostrar el cuadro de multiplicación por escalar
 document.getElementById('escalar').addEventListener('click', () => {
     mostrarCuadroEscalar();
 });
 
-
+// Muestra un cuadro para ingresar el escalar y aplicar la operación
 function mostrarCuadroEscalar() {
-  
-    if (document.getElementById('cuadro-escalar')) return;
+    if (document.getElementById('cuadro-escalar')) return; // Evita duplicados
 
     const resultadoDiv = document.getElementById('resultado');
     const size = parseInt(document.getElementById('size').value);
-
 
     const cuadro = document.createElement('div');
     cuadro.id = 'cuadro-escalar';
@@ -216,6 +224,7 @@ function mostrarCuadroEscalar() {
 
     document.getElementById('input-escalar').focus();
 
+    // Aplica la multiplicación por escalar
     document.getElementById('aplicar-escalar').onclick = () => {
         const k = parseFloat(document.getElementById('input-escalar').value);
         const A = obtenerMatriz('A', size);
@@ -230,11 +239,13 @@ function mostrarCuadroEscalar() {
         cuadro.remove();
     };
 
+    // Cancela la operación
     document.getElementById('cancelar-escalar').onclick = () => {
         cuadro.remove();
     };
 }
 
+// Evento para transponer matrices
 document.getElementById('transponer').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
     const A = obtenerMatriz('A', size);
@@ -244,10 +255,12 @@ document.getElementById('transponer').addEventListener('click', () => {
     mostrarResultadoTranspuestas(transA, transB);
 });
 
+// Devuelve la transpuesta de una matriz
 function transponerMatriz(M) {
     return M[0].map((_, i) => M.map(fila => fila[i]));
 }
 
+// Muestra las transpuestas de ambas matrices
 function mostrarResultadoTranspuestas(transA, transB) {
     const div = document.getElementById('resultado');
     div.innerHTML = `
@@ -272,6 +285,7 @@ function mostrarResultadoTranspuestas(transA, transB) {
     `;
 }
 
+// Evento para calcular determinantes de A y B
 document.getElementById('determinante').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
     const A = obtenerMatriz('A', size);
@@ -291,6 +305,7 @@ document.getElementById('determinante').addEventListener('click', () => {
     }
 });
 
+// Evento para calcular la inversa de A y B y mostrar la verificación (identidad)
 document.getElementById('inversa').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
     const A = obtenerMatriz('A', size);
@@ -308,7 +323,7 @@ document.getElementById('inversa').addEventListener('click', () => {
     }
 });
 
-// Nueva función para mostrar inversa y verificación
+// Muestra la inversa y la verificación (identidad) para ambas matrices
 function mostrarResultadoDobleInversa(invA, invB, verifA, verifB) {
     const div = document.getElementById('resultado');
     div.innerHTML = `
@@ -345,11 +360,13 @@ function mostrarResultadoDobleInversa(invA, invB, verifA, verifB) {
     `;
 }
 
+// Evento para mostrar la matriz identidad del tamaño seleccionado
 document.getElementById('identidad').addEventListener('click', () => {
     const size = parseInt(document.getElementById('size').value);
     mostrarResultado(identidad(size), `Identidad ${size}x${size}`);
 });
 
+// Calcula el determinante de una matriz cuadrada (recursivo)
 function determinante(M) {
     const n = M.length;
     if (n === 1) return M[0][0];
@@ -361,6 +378,7 @@ function determinante(M) {
     return det;
 }
 
+// Calcula la inversa de una matriz cuadrada usando Gauss-Jordan
 function inversa(M) {
     const n = M.length;
     const det = determinante(M);
@@ -369,7 +387,7 @@ function inversa(M) {
     let A = M.map((fila, i) => [...fila, ...identidad(n)[i]]);
    
     for (let i = 0; i < n; i++) {
-       
+        // Busca el mayor pivote para evitar errores numéricos
         let maxRow = i;
         for (let k = i+1; k < n; k++) if (Math.abs(A[k][i]) > Math.abs(A[maxRow][i])) maxRow = k;
         [A[i], A[maxRow]] = [A[maxRow], A[i]];
@@ -386,6 +404,7 @@ function inversa(M) {
     return A.map(fila => fila.slice(n));
 }
 
+// Genera una matriz identidad de tamaño n x n
 function identidad(n) {
     return Array.from({length: n}, (_, i) =>
         Array.from({length: n}, (_, j) => (i === j ? 1 : 0))
